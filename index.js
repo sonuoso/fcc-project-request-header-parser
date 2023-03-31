@@ -4,6 +4,7 @@
 // init project
 require('dotenv').config();
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
@@ -13,6 +14,7 @@ app.use(cors({ optionsSuccessStatus: 200 })); // some legacy browsers choke on 2
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
+app.use('/api/whoami', bodyParser.urlencoded({ extended: false })); //Initiating Middleware for bodyParser
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get('/', function (req, res) {
@@ -20,8 +22,8 @@ app.get('/', function (req, res) {
 });
 
 // your first API endpoint...
-app.get('/api/hello', function (req, res) {
-  res.json({ greeting: 'hello API' });
+app.get('/api/whoami', function (req, res) {
+ res.json({ "ipaddress":req.socket.remoteAddress ,"language":req.headers['accept-language'],"software":req.headers['user-agent'] }); //Setting response the json object with data from request headers
 });
 
 // listen for requests :)
